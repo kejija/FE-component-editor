@@ -21,11 +21,12 @@
   "dependencies": {
     "@mantine/core": "7.2.2",
     "@mantine/hooks": "7.2.2",
+    "@mantine/next": "^6.0.21",
     "@next/bundle-analyzer": "^14.0.1",
     "@tabler/icons-react": "^2.40.0",
-    "next": "14.0.1",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "next": "^14.0.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.2",

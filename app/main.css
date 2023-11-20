@@ -1,0 +1,16 @@
+.hatch {
+  /* position: absolute; */
+  /* width: 400px;
+  left: 400px;
+  height: 300px; */
+
+  background-image: linear-gradient(
+    45deg,
+    transparent 45%,
+    #9191953a 50%,
+    transparent 55%,
+    transparent 100%
+  );
+  background-size: 8px 8px;
+  background-position: 4px 4px;
+}
