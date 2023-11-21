@@ -1,5 +1,6 @@
 const demoData = [
   {
+    id: 0,
     name: 'bldc motor',
     category: 'Electromechanical',
     cad: '',
@@ -24,23 +25,23 @@ const demoData = [
     ],
     parameters: [
       {
-        name: 'Mounting Type',
+        label: 'Mounting Type',
         type: 'string',
         description: 'How the motor is mounted',
       },
       {
-        name: 'Include Encoder Type',
+        label: 'Include Encoder Type',
         type: 'boolean',
         description: 'is encoder included in this',
       },
       {
-        name: 'Model',
+        label: 'Model',
         type: 'option',
         description: 'BLDC Model Number',
         options: ['Model 1', 'Model 2', 'Model 3', 'Model 4', 'Model 5'],
       },
       {
-        name: 'motor kV value',
+        label: 'motor kV value',
         type: 'option',
         description: 'Motor kV',
         options: ['100', '200', '300'],
@@ -66,6 +67,7 @@ const demoData = [
     ],
   },
   {
+    id: 1,
     name: 'numbers tester',
     category: 'Numbers',
     cad: '',
@@ -89,7 +91,7 @@ const demoData = [
     ],
     parameters: [
       {
-        name: 'Include Encoder Type',
+        label: 'Include Encoder Type',
         type: 'boolean',
         description: 'is encoder included in this'
       }

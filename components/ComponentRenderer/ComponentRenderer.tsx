@@ -2,41 +2,32 @@
 
 import {
   Card,
-  Grid,
   Group,
   TextInput,
   Menu,
   ActionIcon,
   Text,
-  Badge,
   Center,
-  Button,
   rem,
   Flex,
-  Paper,
   Divider,
   Container,
   Select,
   Switch,
   SegmentedControl,
   Tabs,
+  Button,
   JsonInput,
+  Paper,
 } from '@mantine/core';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 
 import { IconDots, IconEye, IconFileZip, IconTrash } from '@tabler/icons-react';
-import {
-  ReactElement,
-  JSXElementConstructor,
-  ReactNode,
-  ReactPortal,
-  PromiseLikeOfReactNode,
-  JSX,
-} from 'react';
+import { ReactNode } from 'react';
+import { TableEditor } from './ReactDataTableComponent';
 
 import { demoData } from './demoData.js';
-const demoComponentData = demoData[0];
 
 const TitleMenu = (props) => (
   <Group justify="space-between">
@@ -66,8 +57,8 @@ const TitleMenu = (props) => (
   </Group>
 );
 
-const ParameterRenderer = (props) => {
-  const { name, type, description } = props;
+const InputRenderer = (props) => {
+  const { label, type, description, default_unit, default_value } = props;
   return (
     <TextInput
       type="number"
@@ -128,18 +119,35 @@ const MonitorRenderer = (props) => {
 };
 
 function ComponentPreview(props) {
-  const componentData =
-    props.componentData === undefined
-      ? { inputs: [], outputs: [], parameters: [] }
-      : JSON.parse(props.componentData);
-
-  console.log(componentData);
+  const defaultComponentData = { inputs: [], outputs: [], parameters: [] };
+  let componentData = defaultComponentData;
   const inputsAndParameters: ReactNode[] = [];
   const outputs: ReactNode[] = [];
+
+  try {
+    componentData = JSON.parse(props.componentData);
+  } catch (error) {
+    console.log(error);
+    const errorDisplay = (
+      <Center>
+        <Text size="xl" c="red">
+          Malformed JSON
+        </Text>
+      </Center>
+    );
+    inputsAndParameters.push(errorDisplay);
+    outputs.push(errorDisplay);
+  }
+  // const componentData =
+  //   props.componentData === undefined
+  //     ? { inputs: [], outputs: [], parameters: [] }
+  //     : JSON.parse(props.componentData);
+
   // inputs should only have string and number as types
   componentData.inputs.forEach((input) => {
     inputsAndParameters.push(
-      <ParameterRenderer
+      <InputRenderer
+        key={input.label + 'input'}
         label={input.label}
         default_value={input.default_value}
         default_unit={input.default_unit}
@@ -152,13 +160,22 @@ function ComponentPreview(props) {
   // parameters can have string, number, options, boolean as types
   componentData.parameters.forEach((param) => {
     if (param.type === 'option') {
-      inputsAndParameters.push(<SelectorRenderer label={param.name} options={param.options} />);
+      inputsAndParameters.push(
+        <SelectorRenderer
+          key={param.label + 'option'}
+          label={param.label}
+          options={param.options}
+        />
+      );
     } else if (param.type === 'boolean') {
-      inputsAndParameters.push(<BooleanRenderer label={param.name} />);
+      inputsAndParameters.push(
+        <BooleanRenderer key={param.label + 'boolean'} label={param.label} />
+      );
     } else {
       inputsAndParameters.push(
-        <ParameterRenderer
-          label={param.name}
+        <InputRenderer
+          key={param.label + 'parameter'}
+          label={param.label}
           default_value={param.default_value}
           default_unit={param.default_unit}
           type={param.parameter_type}
@@ -171,8 +188,9 @@ function ComponentPreview(props) {
   // get outputs
   componentData.outputs.forEach((output) => {
     outputs.push(
-      <ParameterRenderer
-        label={output.name}
+      <InputRenderer
+        key={output.label + 'output'}
+        label={output.label}
         default_value={output.default_value}
         default_unit={output.default_unit}
         type={output.parameter_type}
@@ -206,24 +224,17 @@ export function ComponentRenderer() {
     value: index.toString(),
   }));
 
-  const [selectedComponent, setSelectedComponent] = useState(componentNames[0]);
-  const [json, setJson] = useState(JSON.stringify(demoData[0], null, 2));
+  const [selectedComponent, setSelectedComponent] = useState(componentNames[0].value);
+  const [jsonString, setJsonString] = useState(JSON.stringify(demoData[0], null, 2));
   const [canRender, setCanRender] = useState(true);
 
   // when selectedComponent changes, load the new component data
   useEffect(() => {
     const selectedComponentId = parseInt(selectedComponent);
     console.log(demoData[selectedComponentId]);
-    setJson(JSON.stringify(demoData[selectedComponentId], null, 2));
+    setJsonString(JSON.stringify(demoData[selectedComponentId], null, 2));
     // setJson(JSON.stringify(newComponentData, null, 2));
   }, [selectedComponent]);
-
-  // when json changes, reload preview
-  // useEffect(() => {
-  //   if (canRender) {
-  //     console.log('render');
-  //   }
-  // });
 
   function isValidateJson(inputValue) {
     try {
@@ -238,29 +249,42 @@ export function ComponentRenderer() {
   return (
     <div>
       <Center py={20}>
-        <Select
-          allowDeselect={false}
-          w={500}
-          defaultValue={componentNames[0]}
-          data={componentNames}
-          value={selectedComponent}
-          onChange={setSelectedComponent}
-        />
+        <Group>
+          <Select
+            size="xs"
+            allowDeselect={false}
+            w={500}
+            defaultValue={componentNames[0]}
+            data={componentNames}
+            value={selectedComponent}
+            onChange={setSelectedComponent}
+          />
+          <Button.Group>
+            <Button variant="default" size="xs">
+              Reset to Default
+            </Button>
+            <Button variant="default" size="xs" disabled={!canRender}>
+              Save to DB
+            </Button>
+          </Button.Group>
+        </Group>
       </Center>
       <Flex gap="md" justify="center">
-        <ComponentPreview componentData={json} />
+        <ComponentPreview componentData={jsonString} />
         <JsonInput
           maxRows={20}
           validationError="Invalid JSON"
-          variant="filled"
-          w={500}
-          value={json}
+          w={300}
+          value={jsonString}
           onChange={(event) => {
             isValidateJson(event);
-            setJson(event);
+            setJsonString(event);
           }}
           autosize
         />
+        <Paper w={650} p="md" withBorder>
+          <TableEditor componentData={jsonString} />
+        </Paper>
       </Flex>
     </div>
   );
