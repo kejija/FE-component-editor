@@ -1,0 +1,27 @@
+{
+  "sqltools.connections": [
+    {
+      "pgOptions": {
+        "ssl": true
+      },
+      "previewLimit": 50,
+      "server": "ep-rough-math-22144875.us-west-2.retooldb.com",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "retool",
+      "password": "j3IlHwbst5TD",
+      "username": "retool",
+      "database": "retool"
+    },
+    {
+      "previewLimit": 50,
+      "server": "127.0.0.1",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "local",
+      "database": "future",
+      "username": "user",
+      "password": "password"
+    }
+  ]
+}
