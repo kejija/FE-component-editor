@@ -20,6 +20,7 @@ import {
   JsonInput,
   Paper,
 } from '@mantine/core';
+import './component.css';
 
 import { useState, useEffect } from 'react';
 
@@ -28,6 +29,7 @@ import { ReactNode } from 'react';
 import { TableEditor } from './ReactDataTableComponent';
 
 import { demoData } from './demoData.js';
+import { Breakout } from './EditorBreakout';
 
 const TitleMenu = (props) => (
   <Group justify="space-between">
@@ -60,16 +62,19 @@ const TitleMenu = (props) => (
 const InputRenderer = (props) => {
   const { label, type, description, default_unit, default_value } = props;
   return (
-    <TextInput
-      type="number"
-      description={props.label}
-      placeholder={props.default_value}
-      rightSection={props.default_unit}
-      rightSectionWidth={92}
-      radius={0}
-      pb="xs"
-      size="xs"
-    />
+    <div>
+      <Breakout data={props} height={55} />
+      <TextInput
+        type="number"
+        description={props.label}
+        placeholder={props.default_value}
+        rightSection={props.default_unit}
+        rightSectionWidth={92}
+        radius={0}
+        pb="xs"
+        size="xs"
+      />
+    </div>
   );
 };
 
@@ -78,43 +83,65 @@ const SelectorRenderer = (props) => {
   if (props.options.length < 5) {
     return (
       <div>
+        <Breakout data={props} height={55} />
         <Text c="dimmed" size="xs">
           <small>{props.label}</small>
         </Text>
-        <SegmentedControl fullWidth size="xs" data={props.options} />
+        <SegmentedControl mb={8} fullWidth size="xs" data={props.options} />
       </div>
     );
   }
   // if there are more than 5 options, use a select
   return (
-    <Select
-      defaultValue={props.options[0]}
-      description={props.label}
-      data={props.options}
-      searchable
-      pb="xs"
-      size="xs"
-    />
+    <div>
+      <Breakout data={props} height={55} />
+      <Select
+        defaultValue={props.options[0]}
+        description={props.label}
+        data={props.options}
+        searchable
+        pb="xs"
+        size="xs"
+      />
+    </div>
   );
 };
 
-const BooleanRenderer = (props) => <Switch label={props.label} pb="xs" size="xs" />;
-
+const BooleanRenderer = (props) => (
+  <div>
+    <Breakout data={props} height={55} />
+    <Text c="dimmed" size="xs">
+      <small>{props.label}</small>
+    </Text>
+    <SegmentedControl mb={8} fullWidth size="xs" data={['on', 'off']} />
+  </div>
+);
 const MonitorRenderer = (props) => {
   const tabs = ['Plot', '3D View', 'Datasheet'];
+  const [currentTab, setCurrentTab] = useState(tabs[0]);
+
   return (
-    <Tabs>
-      <Tabs.List grow>
-        {tabs.map((tab) => (
-          <Tabs.Tab value={tab} key={tab}>
-            {tab}
-          </Tabs.Tab>
-        ))}
-      </Tabs.List>
-      <Tabs.Panel value="Plot">Graph of outputs value over time</Tabs.Panel>
-      <Tabs.Panel value="3D View">3D Render of CAD</Tabs.Panel>
-      <Tabs.Panel value="Datasheet">Table of Datasheet value from DB</Tabs.Panel>
-    </Tabs>
+    <SegmentedControl
+      mb={8}
+      fullWidth
+      size="xs"
+      data={tabs}
+      value={currentTab}
+      onChange={setCurrentTab}
+    />
+
+    // <Tabs>
+    //   <Tabs.List grow>
+    //     {tabs.map((tab) => (
+    //       <Tabs.Tab value={tab} key={tab}>
+    //         {tab}
+    //       </Tabs.Tab>
+    //     ))}
+    //   </Tabs.List>
+    //   <Tabs.Panel value="Plot">Graph of outputs value over time</Tabs.Panel>
+    //   <Tabs.Panel value="3D View">3D Render of CAD</Tabs.Panel>
+    //   <Tabs.Panel value="Datasheet">Table of Datasheet value from DB</Tabs.Panel>
+    // </Tabs>
   );
 };
 
@@ -199,7 +226,7 @@ function ComponentPreview(props) {
     );
   });
   return (
-    <Card shadow="xl">
+    <Card shadow="xl" w={300} className="component-card">
       <Card.Section withBorder inheritPadding py="xs" mb="sm">
         <TitleMenu component={componentData} />
       </Card.Section>
@@ -227,6 +254,7 @@ export function ComponentRenderer() {
   const [selectedComponent, setSelectedComponent] = useState(componentNames[0].value);
   const [jsonString, setJsonString] = useState(JSON.stringify(demoData[0], null, 2));
   const [canRender, setCanRender] = useState(true);
+  const [currentMode, setCurrentMode] = useState('Editor');
 
   // when selectedComponent changes, load the new component data
   useEffect(() => {
@@ -250,6 +278,12 @@ export function ComponentRenderer() {
     <div>
       <Center py={20}>
         <Group>
+          <SegmentedControl
+            size="xs"
+            data={['Editor', 'Viewer']}
+            value={currentMode}
+            onChange={setCurrentMode}
+          />
           <Select
             size="xs"
             allowDeselect={false}
@@ -270,7 +304,6 @@ export function ComponentRenderer() {
         </Group>
       </Center>
       <Flex gap="md" justify="center">
-        <ComponentPreview componentData={jsonString} />
         <JsonInput
           maxRows={20}
           validationError="Invalid JSON"
@@ -282,9 +315,13 @@ export function ComponentRenderer() {
           }}
           autosize
         />
-        <Paper w={650} p="md" withBorder>
+        <Card w={900} bg={'none'} p={0}>
+          <ComponentPreview componentData={jsonString} />
+        </Card>
+
+        {/* <Paper w={650} p="md" withBorder>
           <TableEditor componentData={jsonString} />
-        </Paper>
+        </Paper> */}
       </Flex>
     </div>
   );
