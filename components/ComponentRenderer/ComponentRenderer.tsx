@@ -26,7 +26,6 @@ import { useState, useEffect } from 'react';
 
 import { IconDots, IconEye, IconFileZip, IconTrash } from '@tabler/icons-react';
 import { ReactNode } from 'react';
-import { TableEditor } from './ReactDataTableComponent';
 
 import { demoData } from './demoData.js';
 import { Breakout } from './EditorBreakout';
@@ -59,31 +58,44 @@ const TitleMenu = (props) => (
   </Group>
 );
 
-const InputRenderer = (props) => {
-  const { label, type, description, default_unit, default_value } = props;
-  return (
-    <div>
-      <Breakout data={props} height={55} />
-      <TextInput
-        type="number"
-        description={props.label}
-        placeholder={props.default_value}
-        rightSection={props.default_unit}
-        rightSectionWidth={92}
-        radius={0}
-        pb="xs"
-        size="xs"
-      />
-    </div>
-  );
-};
+const InputRenderer = (props) => (
+  <div>
+    <Breakout mode={props.mode} data={props} height={55} />
+    <TextInput
+      type="number"
+      description={props.label}
+      placeholder={props.default_value}
+      rightSection={props.default_unit}
+      rightSectionWidth={92}
+      radius={0}
+      pb="xs"
+      size="xs"
+    />
+  </div>
+);
+
+const OutputRenderer = (props) => (
+  <div>
+    <Breakout isOutput mode={props.mode} data={props} height={55} />
+    <TextInput
+      type="number"
+      description={props.label}
+      defaultValue={props.default_value}
+      rightSection={props.default_unit}
+      rightSectionWidth={92}
+      radius={0}
+      pb="xs"
+      size="xs"
+    />
+  </div>
+);
 
 const SelectorRenderer = (props) => {
   // if there are less than 5 options, use a segmented control
   if (props.options.length < 5) {
     return (
       <div>
-        <Breakout data={props} height={55} />
+        <Breakout mode={props.mode} data={props} height={55} />
         <Text c="dimmed" size="xs">
           <small>{props.label}</small>
         </Text>
@@ -94,7 +106,7 @@ const SelectorRenderer = (props) => {
   // if there are more than 5 options, use a select
   return (
     <div>
-      <Breakout data={props} height={55} />
+      <Breakout mode={props.mode} data={props} height={55} />
       <Select
         defaultValue={props.options[0]}
         description={props.label}
@@ -109,7 +121,7 @@ const SelectorRenderer = (props) => {
 
 const BooleanRenderer = (props) => (
   <div>
-    <Breakout data={props} height={55} />
+    <Breakout mode={props.mode} data={props} height={55} />
     <Text c="dimmed" size="xs">
       <small>{props.label}</small>
     </Text>
@@ -129,19 +141,6 @@ const MonitorRenderer = (props) => {
       value={currentTab}
       onChange={setCurrentTab}
     />
-
-    // <Tabs>
-    //   <Tabs.List grow>
-    //     {tabs.map((tab) => (
-    //       <Tabs.Tab value={tab} key={tab}>
-    //         {tab}
-    //       </Tabs.Tab>
-    //     ))}
-    //   </Tabs.List>
-    //   <Tabs.Panel value="Plot">Graph of outputs value over time</Tabs.Panel>
-    //   <Tabs.Panel value="3D View">3D Render of CAD</Tabs.Panel>
-    //   <Tabs.Panel value="Datasheet">Table of Datasheet value from DB</Tabs.Panel>
-    // </Tabs>
   );
 };
 
@@ -154,7 +153,6 @@ function ComponentPreview(props) {
   try {
     componentData = JSON.parse(props.componentData);
   } catch (error) {
-    console.log(error);
     const errorDisplay = (
       <Center>
         <Text size="xl" c="red">
@@ -165,20 +163,16 @@ function ComponentPreview(props) {
     inputsAndParameters.push(errorDisplay);
     outputs.push(errorDisplay);
   }
-  // const componentData =
-  //   props.componentData === undefined
-  //     ? { inputs: [], outputs: [], parameters: [] }
-  //     : JSON.parse(props.componentData);
-
   // inputs should only have string and number as types
   componentData.inputs.forEach((input) => {
     inputsAndParameters.push(
       <InputRenderer
+        mode={props.mode}
         key={input.label + 'input'}
         label={input.label}
         default_value={input.default_value}
         default_unit={input.default_unit}
-        type={input.parameter_type}
+        parameter_type={input.parameter_type}
         description={input.description}
       />
     );
@@ -189,23 +183,33 @@ function ComponentPreview(props) {
     if (param.type === 'option') {
       inputsAndParameters.push(
         <SelectorRenderer
+          mode={props.mode}
           key={param.label + 'option'}
           label={param.label}
           options={param.options}
+          default_value={param.default_value}
+          parameter_type={param.parameter_type}
         />
       );
     } else if (param.type === 'boolean') {
       inputsAndParameters.push(
-        <BooleanRenderer key={param.label + 'boolean'} label={param.label} />
+        <BooleanRenderer
+          parameter_type={param.parameter_type}
+          mode={props.mode}
+          key={param.label + 'boolean'}
+          default_value={param.default_value}
+          label={param.label}
+        />
       );
     } else {
       inputsAndParameters.push(
         <InputRenderer
+          mode={props.mode}
           key={param.label + 'parameter'}
           label={param.label}
           default_value={param.default_value}
           default_unit={param.default_unit}
-          type={param.parameter_type}
+          parameter_type={param.parameter_type}
           description={param.description}
         />
       );
@@ -215,13 +219,15 @@ function ComponentPreview(props) {
   // get outputs
   componentData.outputs.forEach((output) => {
     outputs.push(
-      <InputRenderer
+      <OutputRenderer
+        mode={props.mode}
         key={output.label + 'output'}
         label={output.label}
         default_value={output.default_value}
         default_unit={output.default_unit}
-        type={output.parameter_type}
+        parameter_type={output.parameter_type}
         description={output.description}
+        formula={output.formula}
       />
     );
   });
@@ -280,7 +286,7 @@ export function ComponentRenderer() {
         <Group>
           <SegmentedControl
             size="xs"
-            data={['Editor', 'Viewer']}
+            data={['Editor', 'JSON', 'Viewer']}
             value={currentMode}
             onChange={setCurrentMode}
           />
@@ -304,7 +310,11 @@ export function ComponentRenderer() {
         </Group>
       </Center>
       <Flex gap="md" justify="center">
+        <Card w={currentMode === 'Editor' ? 900 : 350} bg="none" pb={50} pt={0}>
+          <ComponentPreview componentData={jsonString} mode={currentMode} />
+        </Card>
         <JsonInput
+          style={currentMode === 'JSON' ? {} : { display: 'none' }}
           maxRows={20}
           validationError="Invalid JSON"
           w={300}
@@ -315,13 +325,6 @@ export function ComponentRenderer() {
           }}
           autosize
         />
-        <Card w={900} bg={'none'} p={0}>
-          <ComponentPreview componentData={jsonString} />
-        </Card>
-
-        {/* <Paper w={650} p="md" withBorder>
-          <TableEditor componentData={jsonString} />
-        </Paper> */}
       </Flex>
     </div>
   );
