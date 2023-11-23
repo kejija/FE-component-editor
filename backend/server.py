@@ -9,6 +9,10 @@ from flask_sqlalchemy import SQLAlchemy
 
 import json
 import os
+import csv
+
+# from initTables import import_csvs
+import initTables
 
 app = Flask(__name__)
 CORS(app)
@@ -20,62 +24,25 @@ app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
 
 db = SQLAlchemy(app)
 
-class Manufactures(db.Model):
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(String)
-    description: Mapped[str] = mapped_column(String)
-    country: Mapped[str] = mapped_column(String)
-    website: Mapped[str] = mapped_column(String)
-    category: Mapped[str] = mapped_column(String)
+tables = initTables.init(db)
 
-class Users(db.Model):
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    username: Mapped[str] = mapped_column(String, unique=True, nullable=False)
-    email: Mapped[str] = mapped_column(String)
-  
-class Category(db.Model):
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(String, nullable=False)
-    description: Mapped[str] = mapped_column(String)
-    parent_category_id: Mapped[int] = mapped_column(Integer)
-
-class Components(db.Model):
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    created_by: Mapped[int] = mapped_column(Integer, db.ForeignKey(Users.id))
-    name: Mapped[str] = mapped_column(String)
-    description: Mapped[str] = mapped_column(String)
-    image_url: Mapped[str] = mapped_column(String)
-    category: Mapped[int] = mapped_column(Integer, db.ForeignKey(Category.id))
-    cad: Mapped[str] = mapped_column(String)
-    guide: Mapped[str] = mapped_column(String)
-
-class Units(db.Model):
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(String)
-    description: Mapped[str] = mapped_column(String)
-    type: Mapped[str] = mapped_column(String)
-    SI_name: Mapped[str] = mapped_column(String)
-    conversation_to_SI: Mapped[float] = mapped_column(Float)
-
-class Datasheets(db.Model):
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(String)
-    description: Mapped[str] = mapped_column(String)
-    url: Mapped[str] = mapped_column(String)
-    manufacutre_id: Mapped[int] = mapped_column(Integer, db.ForeignKey(Manufactures.id), nullable=False)
-
-class Parameters(db.Model):
-    parameter_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    label: Mapped[str] = mapped_column(String)
-    description: Mapped[str] = mapped_column(String)
-    units: Mapped[int] = mapped_column(Integer, db.ForeignKey(Units.id))
-    default_value: Mapped[float] = mapped_column(String)
-    component_id: Mapped[int] = mapped_column(Integer, db.ForeignKey(Components.id), nullable=False)
-    datasheet_id: Mapped[int] = mapped_column(Integer, db.ForeignKey(Datasheets.id), nullable=False)
-    value_type: Mapped[str] = mapped_column(String)
-    type: Mapped[str] = mapped_column(String)
-    formula: Mapped[str] = mapped_column(String)
-    options: Mapped[str] = mapped_column(JSON)
+#get all csvs in folder
+csv_folder = 'init_csvs'
+for file in os.listdir(csv_folder):
+    if file.endswith(".csv"):
+        table_name = (file.split(' ')[0])
+        print("processing {table} csv".format(table=table_name))
+        with open(os.path.join(csv_folder, file), mode='r', encoding='utf-8-sig') as f:
+            reader = csv.reader(f)
+            header = next(reader)
+            with app.app_context():
+                tables[table_name].query.delete()
+                # add each row to table
+                for i in reader:
+                    kwargs = {column: value for column, value in zip(header, i)}
+                    new_entry = tables[table_name](**kwargs)
+                    db.session.add(new_entry)
+                    db.session.commit()
 
 with app.app_context():
     db.drop_all()
