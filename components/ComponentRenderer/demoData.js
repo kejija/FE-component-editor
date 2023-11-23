@@ -26,23 +26,23 @@ const demoData = [
     parameters: [
       {
         label: 'Mounting Type',
-        type: 'string',
+        parameter_type: 'string',
         description: 'How the motor is mounted',
       },
       {
         label: 'Include Encoder Type',
-        type: 'boolean',
+        parameter_type: 'boolean',
         description: 'is encoder included in this',
       },
       {
         label: 'Model',
-        type: 'option',
+        parameter_type: 'option',
         description: 'BLDC Model Number',
         options: ['Model 1', 'Model 2', 'Model 3', 'Model 4', 'Model 5'],
       },
       {
         label: 'motor kV value',
-        type: 'option',
+        parameter_type: 'option',
         description: 'Motor kV',
         options: ['100', '200', '300'],
       },
@@ -92,7 +92,7 @@ const demoData = [
     parameters: [
       {
         label: 'Include Encoder Type',
-        type: 'boolean',
+        parameter_type: 'boolean',
         description: 'is encoder included in this'
       }
     ],

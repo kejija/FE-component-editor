@@ -1,0 +1,28 @@
+.breakout {
+  /* flex: 0; */
+  /* margin-left: -50px; */
+  position: absolute;
+  z-index: 99;
+  overflow: visible;
+  left: 305px;
+  width: 500px;
+  border-left: 1px solid red;
+  margin-top: 4px;
+  padding-top: 2px;
+  /* padding-top: px; */
+  /* margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw); */
+}
+
+.breakout-line {
+  position: absolute;
+  top: 50%;
+  left: -20px;
+  width: 20px;
+  height: 1px;
+}
+
+.component-card {
+  overflow: visible;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
