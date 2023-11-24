@@ -7,8 +7,8 @@ def init(db):
       name: Mapped[str] = mapped_column(String)
       description: Mapped[str] = mapped_column(String)
       country: Mapped[str] = mapped_column(String)
-      website: Mapped[str] = mapped_column(String)
-      category: Mapped[str] = mapped_column(String)
+      website: Mapped[str] = mapped_column(String, nullable=True)
+      category: Mapped[str] = mapped_column(String, nullable=True)
 
   class Users(db.Model):
       id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -25,11 +25,11 @@ def init(db):
   class Components(db.Model):
       __tablename__ = 'components'
       id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-      created_by: Mapped[int] = mapped_column(Integer, db.ForeignKey(Users.id))
+      created_by: Mapped[int] = mapped_column(Integer)
       name: Mapped[str] = mapped_column(String)
       description: Mapped[str] = mapped_column(String)
       image_url: Mapped[str] = mapped_column(String)
-      category: Mapped[int] = mapped_column(Integer, db.ForeignKey(Categories.id))
+      category_id: Mapped[int] = mapped_column(Integer)
       cad: Mapped[str] = mapped_column(String)
       guide: Mapped[str] = mapped_column(String)
 
@@ -51,16 +51,16 @@ def init(db):
       name: Mapped[str] = mapped_column(String)
       description: Mapped[str] = mapped_column(String)
       url: Mapped[str] = mapped_column(String)
-      manufacutre_id: Mapped[int] = mapped_column(Integer, db.ForeignKey(Manufactures.id), nullable=False)
+      manufacture_id: Mapped[int] = mapped_column(Integer, nullable=False)
 
   class Parameters(db.Model):
       id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
       label: Mapped[str] = mapped_column(String)
       description: Mapped[str] = mapped_column(String)
-      unit_id: Mapped[int] = mapped_column(Integer, db.ForeignKey(Units.id))
+      unit_id: Mapped[int] = mapped_column(Integer)
       default_value: Mapped[float] = mapped_column(String)
-      component_id: Mapped[int] = mapped_column(Integer, db.ForeignKey(Components.id), nullable=False)
-      datasheet_id: Mapped[int] = mapped_column(Integer, db.ForeignKey(Datasheets.id), nullable=False)
+      component_id: Mapped[int] = mapped_column(Integer, nullable=True)
+      datasheet_id: Mapped[int] = mapped_column(Integer, nullable=True)
       value_type: Mapped[str] = mapped_column(String)
       type: Mapped[str] = mapped_column(String)
       formula: Mapped[str] = mapped_column(String)

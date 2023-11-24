@@ -1,3 +1,7 @@
+# csvs
+*.csv
+*.pyc
+
 # Logs
 logs
 *.log

@@ -14,6 +14,8 @@ import csv
 # from initTables import import_csvs
 import initTables
 
+# import pandas as pd
+
 app = Flask(__name__)
 CORS(app)
 
@@ -26,24 +28,63 @@ db = SQLAlchemy(app)
 
 tables = initTables.init(db)
 
+with app.app_context():
+    db.drop_all()
+    db.session.commit()
+    db.create_all()
+
 #get all csvs in folder
 csv_folder = 'init_csvs'
 for file in os.listdir(csv_folder):
     if file.endswith(".csv"):
         table_name = (file.split(' ')[0])
         print("processing {table} csv".format(table=table_name))
-        with open(os.path.join(csv_folder, file), mode='r', encoding='utf-8-sig') as f:
-            reader = csv.reader(f)
-            header = next(reader)
-            with app.app_context():
-                tables[table_name].query.delete()
-                # add each row to table
-                for i in reader:
-                    kwargs = {column: value for column, value in zip(header, i)}
-                    new_entry = tables[table_name](**kwargs)
-                    db.session.add(new_entry)
-                    db.session.commit()
+        # with open(os.path.join(csv_folder, file), mode='r', encoding='utf-8-sig') as f:
+        # df = pd.read_csv(os.path.join(csv_folder, file))
+        # with app.app_context():
+        #     # tables[table_name].query.delete()
+        #     # db.session.commit()
+        #     try:
+            # df.to_sql(table_name, con=db.engine, if_exists='append', index=False)
+        #     except Exception as e:
+        #         print(e)
+        #         # db.session.rollback()
+        #         continue
+            # reader = csv.reader(f)
+            # header = next(reader)
+            # with app.app_context():
+            #     # tables[table_name].query.delete()
+            #     # add each row to table
+                
+            #     for i in reader:
+            #         kwargs = {column: value for column, value in zip(header, i)}
+            #         try:
+            #             new_entry = tables[table_name](**kwargs)
+            #             db.session.add(new_entry)
+            #             db.session.commit()
+                        
 
-with app.app_context():
-    db.drop_all()
-    db.create_all()
+            #         except Exception as e:
+            #             print(e)
+            #             db.session.rollback()
+            #             continue
+
+
+@app.route('/add_component', methods=['POST'])
+def add_component():
+    data = request.get_json()
+    print(data)
+    # create component
+    component = tables['components'](
+        created_by=data['created_by'],
+        name=data['name'],
+        description=data['description'],
+        image_url=data['image_url'],
+        category_id=data['category_id'],
+        cad=data['cad'],
+        guide=data['guide']
+    )
+    db.session.add(component)
+    db.session.commit()
+
+app.run(debug=True)
