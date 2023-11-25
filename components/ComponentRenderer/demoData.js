@@ -10,14 +10,14 @@ const demoData = [
     inputs: [
       {
         label: 'Width',
-        parameter_type: 'number',
+        data_type: 'number',
         default_value: 1000,
         default_unit: 'mm',
         description: 'width description',
       },
       {
         label: 'Height',
-        parameter_type: 'number',
+        data_type: 'number',
         default_value: 500,
         default_unit: 'mm',
         description: 'height description',
@@ -26,23 +26,23 @@ const demoData = [
     parameters: [
       {
         label: 'Mounting Type',
-        parameter_type: 'string',
+        data_type: 'string',
         description: 'How the motor is mounted',
       },
       {
         label: 'Include Encoder Type',
-        parameter_type: 'boolean',
+        data_type: 'boolean',
         description: 'is encoder included in this',
       },
       {
         label: 'Model',
-        parameter_type: 'option',
+        data_type: 'option',
         description: 'BLDC Model Number',
         options: ['Model 1', 'Model 2', 'Model 3', 'Model 4', 'Model 5'],
       },
       {
         label: 'motor kV value',
-        parameter_type: 'option',
+        data_type: 'option',
         description: 'Motor kV',
         options: ['100', '200', '300'],
       },
@@ -50,7 +50,7 @@ const demoData = [
     outputs: [
       {
         label: 'Torque',
-        parameter_type: 'number',
+        data_type: 'number',
         default_value: 1000,
         default_unit: 'kg',
         description: 'weight description',
@@ -58,7 +58,7 @@ const demoData = [
       },
       {
         label: 'Power',
-        parameter_type: 'number',
+        data_type: 'number',
         default_value: 500,
         default_unit: 'W',
         description: 'power description',
@@ -76,14 +76,14 @@ const demoData = [
     inputs: [
       {
         label: 'Width',
-        parameter_type: 'number',
+        data_type: 'number',
         default_value: 1000,
         default_unit: 'mm',
         description: 'width description'
       },
       {
         label: 'Height',
-        parameter_type: 'number',
+        data_type: 'number',
         default_value: 500,
         default_unit: 'mm',
         description: 'height description'
@@ -92,14 +92,14 @@ const demoData = [
     parameters: [
       {
         label: 'Include Encoder Type',
-        parameter_type: 'boolean',
+        data_type: 'boolean',
         description: 'is encoder included in this'
       }
     ],
     outputs: [
       {
         label: 'Power',
-        parameter_type: 'number',
+        data_type: 'number',
         default_value: 500,
         default_unit: 'W',
         description: 'power description',

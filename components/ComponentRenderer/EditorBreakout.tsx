@@ -1,18 +1,29 @@
 // return Card
 
-import { Card, Flex, Divider, TextInput, Select, Button } from '@mantine/core';
+import {
+  CloseButton,
+  Card,
+  Flex,
+  Divider,
+  TextInput,
+  Select,
+  Button,
+  ButtonGroup,
+} from '@mantine/core';
+import useStore from './ComponentStore';
 
 export function Breakout(props) {
-  const { data, height, mode, isOutput } = props;
-  const parameter_types = ['number', 'curve', 'string', 'boolean', 'option'];
+  const { data, height, mode, isOutput, index, parameter_type } = props;
+  const data_types = ['number', 'curve', 'string', 'boolean', 'option'];
   const additional_controls = [];
-  if (data.parameter_type === 'option') {
+
+  if (data.data_type === 'option') {
     additional_controls.push(
       <Button variant="outline" size="xs">
         Edit Options
       </Button>
     );
-  } else if (data.parameter_type === 'number') {
+  } else if (data.data_type === 'number') {
     additional_controls.push(
       <Select
         w={60}
@@ -24,7 +35,6 @@ export function Breakout(props) {
       />
     );
   }
-  console.log(additional_controls);
   return (
     <Card
       radius={2}
@@ -34,7 +44,7 @@ export function Breakout(props) {
       shadow="xs"
     >
       <Divider orientation="horizontal" className="breakout-line" color="red" />
-      <Flex gap="xs" align="Flex-end">
+      <Flex gap="xs" align="Flex-end" w="100%">
         <TextInput
           size="xs"
           withAsterisk
@@ -59,9 +69,9 @@ export function Breakout(props) {
             w={100}
             description="data type"
             size="xs"
-            value={data.parameter_type}
+            value={data.data_type}
             onChange={(e) => console.log(e.target.value)}
-            data={parameter_types}
+            data={data_types}
           />
         )}
         {isOutput ? (
@@ -76,6 +86,13 @@ export function Breakout(props) {
         ) : null}
         {additional_controls}
       </Flex>
+      <CloseButton
+        onClick={() => {
+          console.log('deleting', data, index);
+        }}
+        size="xs"
+        style={{ position: 'absolute', right: 3 }}
+      />
     </Card>
   );
 }
