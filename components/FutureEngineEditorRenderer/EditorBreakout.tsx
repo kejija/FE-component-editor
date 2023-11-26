@@ -8,33 +8,98 @@ import {
   TextInput,
   Select,
   Button,
+  Popover,
   Tooltip,
+  TagsInput,
+  Center,
 } from '@mantine/core';
 import useStore from './ComponentStore';
+import SvelteJSONEditor from './JSONeditor/VJSONEditor';
+import DataPlotter from './dataplotter/DataPlotter';
 
 export function Breakout(props) {
-  const { data, height, mode, isOutput, index, parameter_type, componentID } = props;
-  const data_types = ['number', 'curve', 'string', 'boolean', 'option'];
+  const { data, height, mode, index, parameter_type, componentID } = props;
+  const data_types = ['number', 'table', 'string', 'boolean', 'option', 'datasheet'];
   const additional_controls = [];
 
   const { deleteParameter, updateParameter } = useStore();
 
   if (data.data_type === 'option') {
     additional_controls.push(
-      <Button variant="outline" size="xs">
-        Edit Options
-      </Button>
+      <>
+        <Popover trapFocus width={500} position="bottom" withArrow shadow="md">
+          <Popover.Target>
+            <Button size="xs" variant="outline">
+              Edit Options
+            </Button>
+          </Popover.Target>
+          <Popover.Dropdown>
+            <TagsInput
+              variant="filled"
+              size="xs"
+              description="options list"
+              value={data.options || []}
+              onChange={(e) => updateParameter(componentID, parameter_type, index, { options: e })}
+            />
+          </Popover.Dropdown>
+        </Popover>
+      </>
+    );
+  } else if (data.data_type === 'table') {
+    additional_controls.push(
+      <>
+        <Popover
+          closeOnClickOutside={false}
+          trapFocus
+          width={500}
+          position="bottom"
+          withArrow
+          shadow="md"
+        >
+          <Popover.Target>
+            <Button size="xs" variant="outline">
+              Edit Table Data
+            </Button>
+          </Popover.Target>
+          <Popover.Dropdown>
+            <SvelteJSONEditor
+              mode="table"
+              content={{ json: data.table }}
+              onChange={(e) =>
+                updateParameter(componentID, parameter_type, index, { table: e.json })
+              }
+            />
+            <Center>
+              <DataPlotter title={data.label} data={data.table} />
+            </Center>
+          </Popover.Dropdown>
+        </Popover>
+      </>
     );
   } else if (data.data_type === 'number') {
     additional_controls.push(
-      <Select
-        w={60}
-        description="units"
-        size="xs"
-        value={data.default_unit}
-        onChange={(e) => updateParameter(componentID, parameter_type, index, { default_unit: e })}
-        data={['mm']}
-      />
+      <>
+        <TextInput
+          size="xs"
+          value={data.default_value}
+          onChange={(e) =>
+            updateParameter(componentID, parameter_type, index, {
+              default_value: e.target.value,
+            })
+          }
+          withAsterisk
+          w={100}
+          description="Default Value"
+        />
+        <Select
+          w={60}
+          description="units"
+          size="xs"
+          value={data.default_unit}
+          onChange={(e) => updateParameter(componentID, parameter_type, index, { default_unit: e })}
+          data={['mm']}
+        />
+      </>
     );
   }
   return (
@@ -72,19 +137,6 @@ export function Breakout(props) {
           />
         ) : (
           <>
-            <TextInput
-              size="xs"
-              value={data.default_value}
-              onChange={(e) =>
-                updateParameter(componentID, parameter_type, index, {
-                  default_value: e.target.value,
-                })
-              }
-              withAsterisk
-              w={100}
-              description="Default Value"
-            />
-
             <Select
               w={100}
               description="data type"

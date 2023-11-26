@@ -157,7 +157,7 @@ export function FutureEngineRenderer() {
           pl="0"
           ml="-25px"
           w={450}
-          h={500}
+          // h={500}
           radius={0}
           style={currentMode === 'JSON' ? {} : { display: 'none' }}
         >

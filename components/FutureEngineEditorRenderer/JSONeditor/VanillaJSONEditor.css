@@ -1,6 +1,8 @@
 .vanilla-jsoneditor-react {
   display: flex;
   flex: 1;
+  font-size: x-small;
+  zoom: 0.8;
 }
 
 .jse-theme-dark {

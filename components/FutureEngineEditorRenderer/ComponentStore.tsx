@@ -20,7 +20,7 @@ const defaultParameter = {
   data_type: 'number',
   description: 'New Description',
   options: [],
-  curve: {},
+  table: [],
 };
 
 type Parameter = {
@@ -31,7 +31,8 @@ type Parameter = {
   data_type: string;
   description: string;
   options: string[];
-  curve: object;
+  table: object[];
+  datasheets: object[];
 };
 
 type Component = {
@@ -63,7 +64,7 @@ type Components = {
 };
 
 const useStore = create<Components>((set) => ({
-  components: demoData,
+  components: demoData as Component[],
   setComponentsData: (componentsData: any) => set({ components: componentsData }, false),
   addNewComponent: () => {
     set((state) => ({

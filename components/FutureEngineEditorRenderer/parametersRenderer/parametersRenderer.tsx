@@ -1,4 +1,4 @@
-import { TextInput, Text, SegmentedControl, Select } from '@mantine/core';
+import { TextInput, Text, Card, SegmentedControl, Select } from '@mantine/core';
 import { useState } from 'react';
 
 import { Breakout } from '../EditorBreakout';
@@ -21,7 +21,7 @@ export const MonitorRenderer = () => {
 
 export const ParameterRow = (props: any) => {
   const { mode, parameter_type, index, parameterData, componentID } = props;
-  const { label, default_value, default_unit, options, data_type } = parameterData;
+  const { label, default_value, default_unit, options, data_type, table } = parameterData;
 
   let inputElement = null;
 
@@ -55,11 +55,19 @@ export const ParameterRow = (props: any) => {
       );
       break;
     case 'option':
-      if (options.length < 5) {
+      if (options === undefined) {
+        inputElement = (
+          <Card h={60}>
+            <Text size="xs" c="orange">
+              INITIALIZE OPTION LIST TO CONTINUE
+            </Text>
+          </Card>
+        );
+      } else if (options.length < 5) {
         inputElement = (
           <>
             <Text c="dimmed" size="xs">
-              <small>{props.label}</small>
+              <small>{label}</small>
             </Text>
             <SegmentedControl mb={8} fullWidth size="xs" data={options} />
           </>
@@ -88,7 +96,23 @@ export const ParameterRow = (props: any) => {
         </div>
       );
       break;
-    case 'curve':
+    case 'table':
+      inputElement = (
+        <Card h={60} shadow="none">
+          <Text size="xs" c="orange">
+            TABLE DATA TO BE DETERMINED
+          </Text>
+        </Card>
+      );
+      break;
+    case 'datasheet':
+      inputElement = (
+        <Card h={60} shadow="none">
+          <Text size="xs" c="orange">
+            DATASHEET DISPLAY TO BE DETERMINED
+          </Text>
+        </Card>
+      );
       break;
     default:
       break;

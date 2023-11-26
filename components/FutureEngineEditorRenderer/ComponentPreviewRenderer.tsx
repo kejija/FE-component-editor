@@ -10,12 +10,10 @@ function ComponentPreview(props: { componentData: JSON; mode: string; componentI
   const { updateComponent } = useStore();
 
   const componentData: JSON = props.componentData || {
-    inputs: [],
     outputs: [],
     parameters: [],
   };
   const componentParameters = {
-    inputs: [],
     outputs: [],
     parameters: [],
   };
