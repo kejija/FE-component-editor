@@ -2,6 +2,7 @@ import { TextInput, Text, Card, SegmentedControl, Select } from '@mantine/core';
 import { useState } from 'react';
 
 import { Breakout } from '../EditorBreakout';
+import DataPlotter from '../dataplotter/DataPlotter';
 
 export const MonitorRenderer = () => {
   const tabs = ['Plot', '3D View', 'Datasheet'];
@@ -97,13 +98,7 @@ export const ParameterRow = (props: any) => {
       );
       break;
     case 'table':
-      inputElement = (
-        <Card h={60} shadow="none">
-          <Text size="xs" c="orange">
-            TABLE DATA TO BE DETERMINED
-          </Text>
-        </Card>
-      );
+      inputElement = <DataPlotter title={label} data={table} containerHeight={200} />;
       break;
     case 'datasheet':
       inputElement = (
