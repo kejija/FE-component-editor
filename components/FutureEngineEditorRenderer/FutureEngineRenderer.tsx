@@ -14,6 +14,8 @@ import {
 import './component.css';
 
 import { useState, useEffect } from 'react';
+import { CSVDownload, CSVLink } from 'react-csv';
+
 import SvelteJSONEditor from './JSONeditor/VJSONEditor';
 
 import ComponentPreview from './ComponentPreviewRenderer';
@@ -122,8 +124,13 @@ export function FutureEngineRenderer() {
               Reset
             </Button>
             <Button variant="default" size="xs" disabled={currentMode === 'Viewer'}>
-              Save
+              Save DB
             </Button>
+            <CSVLink data={components} target="_blank">
+              <Button variant="default" size="xs" disabled={currentMode === 'Viewer'}>
+                Export CSV
+              </Button>
+            </CSVLink>
           </Button.Group>
         </Card>
       </Group>
@@ -144,15 +151,6 @@ export function FutureEngineRenderer() {
             componentID={selectedComponentIndex}
           />
         </Card>
-        {/* <JsonInput
-          style={currentMode === 'JSON' ? {} : { display: 'none' }}
-          maxRows={40}
-          validationError="Invalid JSON"
-          w={400}
-          value={jsonString}
-          onChange={setJsonString}
-          autosize
-        /> */}
         <Card
           py="0"
           bg="none"

@@ -53,6 +53,13 @@ type Components = {
   newComponent: (componentData: Component) => void;
   addInput: (componentId: number, input: Parameter) => void;
   deleteParameter: (componentId: number, parameter_type: string, parameterId: number) => void;
+  updateComponent: (componentId: number, updateJSON: JSON) => void;
+  updateParameter: (
+    componentId: number,
+    parameter_type: string,
+    parameterId: number,
+    updateJSON: JSON
+  ) => void;
 };
 
 const useStore = create<Components>((set) => ({
@@ -78,6 +85,28 @@ const useStore = create<Components>((set) => ({
     set((state) => {
       const newComponents = [...state.components];
       newComponents[componentId][parameter_type].splice(parameterId, 1);
+      return { components: [...newComponents] };
+    });
+  },
+  updateComponent: (componentId: number, updateJSON: JSON) => {
+    set((state) => {
+      const newComponents = [...state.components];
+      newComponents[componentId] = { ...newComponents[componentId], ...updateJSON };
+      return { components: [...newComponents] };
+    });
+  },
+  updateParameter: (
+    componentId: number,
+    parameter_type: string,
+    parameterId: number,
+    updateJSON: JSON
+  ) => {
+    set((state) => {
+      const newComponents = [...state.components];
+      newComponents[componentId][parameter_type][parameterId] = {
+        ...newComponents[componentId][parameter_type][parameterId],
+        ...updateJSON,
+      };
       return { components: [...newComponents] };
     });
   },

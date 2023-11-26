@@ -1,18 +1,14 @@
 // this file render what it looks like in Future Engine app
 
-import { Card, TextInput, Flex, Divider, Container } from '@mantine/core';
+import { Card, TextInput, Flex, Container, Divider } from '@mantine/core';
 
-import {
-  // InputRenderer,
-  // OutputRenderer,
-  // SelectorRenderer,
-  // BooleanRenderer,
-  MonitorRenderer,
-  ParameterRow,
-} from './parametersRenderer/parametersRenderer';
+import { MonitorRenderer, ParameterRow } from './parametersRenderer/parametersRenderer';
+import useStore from './ComponentStore';
 import { TitleMenu } from './TitleMenu';
 
 function ComponentPreview(props: { componentData: JSON; mode: string; componentID: number }) {
+  const { updateComponent } = useStore();
+
   const componentData: JSON = props.componentData || {
     inputs: [],
     outputs: [],
@@ -45,14 +41,18 @@ function ComponentPreview(props: { componentData: JSON; mode: string; componentI
     <Card shadow="xl" w={300} className="component-card">
       <Card.Section withBorder inheritPadding py="xs" mb="sm">
         {/* Title Editor */}
-        <Card className="breakout" style={props.mode === 'Editor' ? {} : { display: 'none' }}>
+        <Card
+          shadow="xs"
+          className="breakout"
+          style={props.mode === 'Editor' ? {} : { display: 'none' }}
+        >
           <Flex gap="xs" align="Flex-end">
             <TextInput
               size="xs"
               withAsterisk
               w={150}
               value={componentData.name}
-              onChange={(e) => console.log(e.target.value)}
+              onChange={(e) => updateComponent(props.componentID, { name: e.target.value })}
               description="Name"
               placeholder="Input placeholder"
             />
@@ -61,7 +61,7 @@ function ComponentPreview(props: { componentData: JSON; mode: string; componentI
               withAsterisk
               w={150}
               value={componentData.category}
-              onChange={(e) => console.log(e.target.value)}
+              onChange={(e) => updateComponent(props.componentID, { category: e.target.value })}
               description="Category"
               placeholder="Input placeholder"
             />
