@@ -41,7 +41,7 @@ type Component = {
   cad: string;
   icon: string;
   description: string;
-  inputs: Parameter[];
+  // inputs: Parameter[];
   parameters: Parameter[];
   outputs: Parameter[];
 };
@@ -52,6 +52,7 @@ type Components = {
   setComponentsData: (componentData: any) => void;
   newComponent: (componentData: Component) => void;
   addInput: (componentId: number, input: Parameter) => void;
+  deleteParameter: (componentId: number, parameter_type: string, parameterId: number) => void;
 };
 
 const useStore = create<Components>((set) => ({
@@ -70,6 +71,13 @@ const useStore = create<Components>((set) => ({
         id: newComponents[componentId][parameter_type].length,
       };
       newComponents[componentId][parameter_type].push(newParameter);
+      return { components: [...newComponents] };
+    });
+  },
+  deleteParameter: (componentId: number, parameter_type: string, parameterId: number) => {
+    set((state) => {
+      const newComponents = [...state.components];
+      newComponents[componentId][parameter_type].splice(parameterId, 1);
       return { components: [...newComponents] };
     });
   },

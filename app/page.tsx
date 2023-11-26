@@ -1,6 +1,6 @@
 import { Welcome } from '../components/Welcome/Welcome';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
-import { ComponentRenderer } from '../components/ComponentRenderer/ComponentRenderer';
+import { FutureEngineRenderer } from '../components/FutureEngineEditorRenderer/FutureEngineRenderer';
 import { Flex } from '@mantine/core';
 
 export default function HomePage() {
@@ -11,7 +11,7 @@ export default function HomePage() {
         <ColorSchemeToggle />
       </Flex>
 
-      <ComponentRenderer />
+      <FutureEngineRenderer />
     </div>
   );
 }

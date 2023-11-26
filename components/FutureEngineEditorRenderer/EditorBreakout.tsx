@@ -8,14 +8,16 @@ import {
   TextInput,
   Select,
   Button,
-  ButtonGroup,
+  Tooltip,
 } from '@mantine/core';
 import useStore from './ComponentStore';
 
 export function Breakout(props) {
-  const { data, height, mode, isOutput, index, parameter_type } = props;
+  const { data, height, mode, isOutput, index, parameter_type, componentID } = props;
   const data_types = ['number', 'curve', 'string', 'boolean', 'option'];
   const additional_controls = [];
+
+  const { deleteParameter } = useStore();
 
   if (data.data_type === 'option') {
     additional_controls.push(
@@ -86,13 +88,15 @@ export function Breakout(props) {
         ) : null}
         {additional_controls}
       </Flex>
-      <CloseButton
-        onClick={() => {
-          console.log('deleting', data, index);
-        }}
-        size="xs"
-        style={{ position: 'absolute', right: 3 }}
-      />
+      <Tooltip label={JSON.stringify({ componentID, index, parameter_type })}>
+        <CloseButton
+          onClick={() => {
+            deleteParameter(componentID, parameter_type, index);
+          }}
+          size="xs"
+          style={{ position: 'absolute', right: 3 }}
+        />
+      </Tooltip>
     </Card>
   );
 }

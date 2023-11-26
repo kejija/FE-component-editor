@@ -7,13 +7,15 @@ const demoData = [
     icon: 'Motor',
     description:
       'A Brushless DC (BLDC) motor is a type of electric motor that uses magnetically driven rotation, employing electronic commutation instead of brushes for improved efficiency, reliability, and reduced maintenance.',
-    inputs: [
+    parameters: [
       {
         label: 'Width',
         data_type: 'number',
         default_value: 1000,
         default_unit: 'mm',
         description: 'width description',
+        isInput: true,
+        isOutput: true,
       },
       {
         label: 'Height',
@@ -21,18 +23,22 @@ const demoData = [
         default_value: 500,
         default_unit: 'mm',
         description: 'height description',
+        isInput: true,
+        isOutput: true,
       },
-    ],
-    parameters: [
       {
         label: 'Mounting Type',
         data_type: 'string',
         description: 'How the motor is mounted',
+        isInput: true,
+        isOutput: true,
       },
       {
         label: 'Include Encoder Type',
         data_type: 'boolean',
         description: 'is encoder included in this',
+        isInput: true,
+        isOutput: true,
       },
       {
         label: 'Model',
@@ -45,6 +51,7 @@ const demoData = [
         data_type: 'option',
         description: 'Motor kV',
         options: ['100', '200', '300'],
+        isInput: true
       },
     ],
     outputs: [
@@ -73,7 +80,7 @@ const demoData = [
     cad: '',
     icon: 'Numbers',
     description: 'numbers description',
-    inputs: [
+    parameters: [
       {
         label: 'Width',
         data_type: 'number',
@@ -87,9 +94,7 @@ const demoData = [
         default_value: 500,
         default_unit: 'mm',
         description: 'height description'
-      }
-    ],
-    parameters: [
+      },
       {
         label: 'Include Encoder Type',
         data_type: 'boolean',
