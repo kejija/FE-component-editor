@@ -42,22 +42,21 @@ type Component = {
   cad: string;
   icon: string;
   description: string;
-  // inputs: Parameter[];
   parameters: Parameter[];
   outputs: Parameter[];
 };
 
 type FEData = {
-  components: Component[];
-  datasheets: Parameter[];
+  DBcomponents: Component[];
+  DBdatasheets: Parameter[];
   setComponentsData: (componentData: any) => void;
   addNewComponent: (componentData: Component) => void;
-  addParam: (componentId: number, parameter_type: string) => void;
-  deleteParameter: (componentId: number, parameter_type: string, parameterId: number) => void;
+  addParam: (parameter_type: keyof Component,componentId: number) => void;
+  deleteParameter: (componentId: number, parameter_type: keyof Component, parameterId: number) => void;
   updateComponent: (componentId: number, updateJSON: JSON) => void;
   updateParameter: (
     componentId: number,
-    parameter_type: string,
+    parameter_type: keyof Component,
     parameterId: number,
     updateJSON: JSON
   ) => void;
@@ -69,12 +68,13 @@ const useStore = create<FEData>((set) => ({
   setComponentsData: (componentsData: Component) => set({ DBcomponents: componentsData }, false),
   addNewComponent: () => {
     set((state) => ({
-      components: [...state.DBcomponents, { ...defaultComponent, id: state.DBcomponents.length }],
+      DBcomponents: [...state.DBcomponents, { ...defaultComponent, id: state.DBcomponents.length }],
     }));
   },
-  addParam: (parameter_type: string, componentId: number) => {
+  addParam: (parameter_type, componentId) => {
     set((state) => {
       const newComponents = [...state.DBcomponents];
+      console.log(newComponents[componentId])
       const newParameter = {
         ...defaultParameter,
         id: newComponents[componentId][parameter_type].length,

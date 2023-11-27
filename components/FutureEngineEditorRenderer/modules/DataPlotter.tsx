@@ -50,7 +50,7 @@ export default function DataPlotter(props) {
 
   Object.keys(data[0]).forEach((key, index) => {
     if (key !== x_dataKey) {
-      lines.push(<Line type="monotone" dataKey={key} strokeWidth={2} stroke={colors[index]} />);
+      lines.push(<Line type="monotone" dataKey={key} strokeWidth={2} stroke={colors[index]} key={'line' + index} />);
       columns.push(key);
     }
   });

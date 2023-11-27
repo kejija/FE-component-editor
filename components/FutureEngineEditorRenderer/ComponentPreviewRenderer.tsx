@@ -2,9 +2,9 @@
 
 import { Card, TextInput, Flex, Container, Divider } from '@mantine/core';
 
-import { MonitorRenderer, ParameterRow } from './parametersRenderer/parametersRenderer';
+import { MonitorRenderer, ParameterRow } from './modules/parametersRenderer';
 import useStore from './ComponentStore';
-import { TitleMenu } from './TitleMenu';
+import { TitleMenu } from './modules/TitleMenu';
 
 function ComponentPreview(props: { componentData: JSON; mode: string; componentID: number }) {
   const { updateComponent } = useStore();
@@ -27,7 +27,7 @@ function ComponentPreview(props: { componentData: JSON; mode: string; componentI
           componentID={props.componentID}
           mode={props.mode}
           parameter_type={parameter_type}
-          key={`parameterData${parameterData.label}`}
+          key={`parameterData${parameterData.label}${index}}`}
           index={index}
           parameterData={parameterData}
         />

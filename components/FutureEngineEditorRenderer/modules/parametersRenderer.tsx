@@ -1,8 +1,8 @@
 import { TextInput, Text, Card, SegmentedControl, Select } from '@mantine/core';
 import { useState } from 'react';
 
-import { Breakout } from '../EditorBreakout';
-import DataPlotter from '../dataplotter/DataPlotter';
+import { Breakout } from './EditorBreakout';
+import DataPlotter from './DataPlotter';
 
 import useStore from '../ComponentStore';
 
@@ -125,12 +125,12 @@ export const ParameterRow = (props: any) => {
   }
 
   return (
-    <div className="parameterRow">
+    <div className="parameterRow" key={'row' + label + index}>
       <Breakout
         componentID={componentID}
         parameter_type={parameter_type}
         index={index}
-        key={label}
+        key={label + index}
         mode={mode}
         data={parameterData}
         height={55}
