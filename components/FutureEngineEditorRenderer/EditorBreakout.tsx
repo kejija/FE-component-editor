@@ -76,6 +76,26 @@ export function Breakout(props) {
         </Popover>
       </>
     );
+  } else if (data.data_type === 'datasheet') {
+    additional_controls.push(
+      <>
+        <Popover
+          closeOnClickOutside={false}
+          trapFocus
+          width={500}
+          position="bottom"
+          withArrow
+          shadow="md"
+        >
+          <Popover.Target>
+            <Button size="xs" variant="outline">
+              Select Datasheet Options
+            </Button>
+          </Popover.Target>
+          <Popover.Dropdown>TO DO</Popover.Dropdown>
+        </Popover>
+      </>
+    );
   } else if (data.data_type === 'number') {
     additional_controls.push(
       <>

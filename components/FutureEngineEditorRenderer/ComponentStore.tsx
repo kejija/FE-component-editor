@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { demoData } from './demoData';
+import { demoData, datasheets } from './demoData';
 
 const defaultComponent = {
   name: 'New Component',
@@ -47,12 +47,12 @@ type Component = {
   outputs: Parameter[];
 };
 
-type Components = {
+type FEData = {
   components: Component[];
-  defaultComponent: Component;
+  datasheets: Parameter[];
   setComponentsData: (componentData: any) => void;
-  newComponent: (componentData: Component) => void;
-  addInput: (componentId: number, input: Parameter) => void;
+  addNewComponent: (componentData: Component) => void;
+  addParam: (componentId: number, parameter_type: string) => void;
   deleteParameter: (componentId: number, parameter_type: string, parameterId: number) => void;
   updateComponent: (componentId: number, updateJSON: JSON) => void;
   updateParameter: (
@@ -63,37 +63,39 @@ type Components = {
   ) => void;
 };
 
-const useStore = create<Components>((set) => ({
-  components: demoData as Component[],
-  setComponentsData: (componentsData: any) => set({ components: componentsData }, false),
+const useStore = create<FEData>((set) => ({
+  DBcomponents: demoData as Component[],
+  DBdatasheets: datasheets as Parameter[],
+  setComponentsData: (componentsData: Component) => set({ DBcomponents: componentsData }, false),
   addNewComponent: () => {
     set((state) => ({
-      components: [...state.components, { ...defaultComponent, id: state.components.length }],
+      components: [...state.DBcomponents, { ...defaultComponent, id: state.DBcomponents.length }],
     }));
   },
   addParam: (parameter_type: string, componentId: number) => {
     set((state) => {
-      const newComponents = [...state.components];
+      const newComponents = [...state.DBcomponents];
       const newParameter = {
         ...defaultParameter,
         id: newComponents[componentId][parameter_type].length,
       };
       newComponents[componentId][parameter_type].push(newParameter);
-      return { components: [...newComponents] };
+      return { DBcomponents: [...newComponents] };
     });
   },
   deleteParameter: (componentId: number, parameter_type: string, parameterId: number) => {
     set((state) => {
-      const newComponents = [...state.components];
+      const newComponents = [...state.DBcomponents];
       newComponents[componentId][parameter_type].splice(parameterId, 1);
-      return { components: [...newComponents] };
+      return { DBcomponents: [...newComponents] };
     });
   },
   updateComponent: (componentId: number, updateJSON: JSON) => {
     set((state) => {
-      const newComponents = [...state.components];
+      const newComponents = [...state.DBcomponents];
+      console.log(componentId, updateJSON);
       newComponents[componentId] = { ...newComponents[componentId], ...updateJSON };
-      return { components: [...newComponents] };
+      return { DBcomponents: [...newComponents] };
     });
   },
   updateParameter: (
@@ -103,12 +105,12 @@ const useStore = create<Components>((set) => ({
     updateJSON: JSON
   ) => {
     set((state) => {
-      const newComponents = [...state.components];
+      const newComponents = [...state.DBcomponents];
       newComponents[componentId][parameter_type][parameterId] = {
         ...newComponents[componentId][parameter_type][parameterId],
         ...updateJSON,
       };
-      return { components: [...newComponents] };
+      return { DBcomponents: [...newComponents] };
     });
   },
 }));

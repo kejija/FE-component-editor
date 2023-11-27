@@ -45,7 +45,7 @@ const demoData = [
         data_type: 'datasheet',
         description: 'BLDC Model Number',
         options: ['Model 1', 'Model 2', 'Model 3', 'Model 4', 'Model 5'],
-        datasheets: []
+        datasheets: [0, 1]
       },
       {
         label: 'motor kV value',
@@ -136,4 +136,69 @@ const demoData = [
     ]
   }
 ]
-export { demoData }
+
+const datasheets = [
+  {
+    id: 0,
+    name: 'Model 1',
+    description: 'Model 1 description',
+    category: 'Electromechanical',
+    manufactureModelNumber: 'M1FADA',
+    manufacture: 'Future Motion',
+    parameters: [
+      {
+        label: 'Shaft Length',
+        data_type: 'number',
+        value: 1000,
+        unit: 'mm',
+        description: 'width description'
+      },
+      {
+        label: 'Shaft Diameter',
+        data_type: 'number',
+        value: 500,
+        unit: 'mm',
+        description: 'diameter description'
+      },
+      {
+        label: 'max rpm',
+        data_type: 'number',
+        value: 500,
+        unit: 'rpm',
+        description: 'max rpm description'
+      }
+    ],
+  },
+  {
+    id: 1,
+    name: 'Model 2',
+    description: 'Model 2 description',
+    category: 'Electromechanical',
+    manufactureModelNumber: 'M2FADA',
+    manufacture: 'Future Motion',
+    parameters: [
+      {
+        label: 'Shaft Length',
+        data_type: 'number',
+        value: 5000,
+        unit: 'mm',
+        description: 'width description'
+      },
+      {
+        label: 'Shaft Diameter',
+        data_type: 'number',
+        value: 600,
+        unit: 'mm',
+        description: 'diameter description'
+      },
+      {
+        label: 'max rpm',
+        data_type: 'number',
+        value: 700,
+        unit: 'rpm',
+        description: 'max rpm description'
+      }
+    ],
+  }
+]
+export { demoData, datasheets }

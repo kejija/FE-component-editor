@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { Breakout } from '../EditorBreakout';
 import DataPlotter from '../dataplotter/DataPlotter';
 
+import useStore from '../ComponentStore';
+
 export const MonitorRenderer = () => {
   const tabs = ['Plot', '3D View', 'Datasheet'];
   const [currentTab, setCurrentTab] = useState(tabs[0]);
@@ -22,7 +24,8 @@ export const MonitorRenderer = () => {
 
 export const ParameterRow = (props: any) => {
   const { mode, parameter_type, index, parameterData, componentID } = props;
-  const { label, default_value, default_unit, options, data_type, table } = parameterData;
+  const { label, default_value, default_unit, options, data_type, table, datasheets } =
+    parameterData;
 
   let inputElement = null;
 
@@ -101,12 +104,20 @@ export const ParameterRow = (props: any) => {
       inputElement = <DataPlotter title={label} data={table} containerHeight={200} />;
       break;
     case 'datasheet':
+      const { DBdatasheets } = useStore();
+      const selectData = DBdatasheets.map((datasheet: any) => ({
+        label: `${datasheet.name} - ${datasheet.manufacture} (${datasheet.manufactureModelNumber})`,
+        value: datasheet.id.toString(),
+      }));
       inputElement = (
-        <Card h={60} shadow="none">
-          <Text size="xs" c="orange">
-            DATASHEET DISPLAY TO BE DETERMINED
-          </Text>
-        </Card>
+        <Select
+          defaultValue="0"
+          description={label}
+          data={selectData}
+          searchable
+          pb="xs"
+          size="xs"
+        />
       );
       break;
     default:

@@ -23,7 +23,7 @@ import ComponentPreview from './ComponentPreviewRenderer';
 import useStore from './ComponentStore';
 
 export function FutureEngineRenderer() {
-  const { components, setComponentsData, addNewComponent, addParam } = useStore();
+  const { DBcomponents, setComponentsData, addNewComponent, addParam } = useStore();
 
   const [selectedComponentIndex, setSelectedComponentIndex] = useState(0);
   const [currentMode, setCurrentMode] = useState('Editor');
@@ -31,15 +31,15 @@ export function FutureEngineRenderer() {
   const [componentNamesList, setComponentNamesList] = useState([]);
 
   useEffect(() => {
-    console.log('components updated', components);
-    const componentNames: { label: string; value: string }[] = components.map(
+    console.log('components updated', DBcomponents);
+    const componentNames: { label: string; value: string }[] = DBcomponents.map(
       (component, index) => ({
         label: component.name,
         value: index.toString(),
       })
     );
     setComponentNamesList(componentNames as any);
-  }, [components]);
+  }, [DBcomponents]);
 
   function ControlsRowRenderer() {
     return (
@@ -86,7 +86,7 @@ export function FutureEngineRenderer() {
               variant="default"
               onClick={() => {
                 addNewComponent();
-                setSelectedComponentIndex(components.length.toString());
+                setSelectedComponentIndex(DBcomponents.length.toString());
               }}
               size="xs"
               disabled={currentMode !== 'Editor'}
@@ -126,7 +126,7 @@ export function FutureEngineRenderer() {
             <Button variant="default" size="xs" disabled={currentMode === 'Viewer'}>
               Save DB
             </Button>
-            <CSVLink data={components} target="_blank">
+            <CSVLink data={DBcomponents} target="_blank">
               <Button variant="default" size="xs" disabled={currentMode === 'Viewer'}>
                 Export CSV
               </Button>
@@ -146,7 +146,7 @@ export function FutureEngineRenderer() {
       <Flex gap="md" justify="center">
         <Card w={currentMode === 'Editor' ? 900 : 350} bg="none" pb={50} pt={0}>
           <ComponentPreview
-            componentData={components[selectedComponentIndex]}
+            componentData={DBcomponents[selectedComponentIndex]}
             mode={currentMode}
             componentID={selectedComponentIndex}
           />
@@ -162,9 +162,9 @@ export function FutureEngineRenderer() {
           style={currentMode === 'JSON' ? {} : { display: 'none' }}
         >
           <SvelteJSONEditor
-            content={{ json: components[selectedComponentIndex] }}
+            content={{ json: DBcomponents[selectedComponentIndex] }}
             onChange={(e) => {
-              const newComponents = components;
+              const newComponents = DBcomponents;
               newComponents[selectedComponentIndex] = e.json;
               setComponentsData(newComponents);
             }}
