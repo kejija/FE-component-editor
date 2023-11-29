@@ -2,7 +2,7 @@
 
 import { Card, TextInput, Flex, Container, Divider } from '@mantine/core';
 
-import { MonitorRenderer, ParameterRow } from './modules/parametersRenderer';
+import { MonitorRenderer, ParameterRow } from './modules/ParametersRenderer';
 import useStore from './ComponentStore';
 import { TitleMenu } from './modules/TitleMenu';
 

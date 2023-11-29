@@ -16,8 +16,17 @@ import {
 import useStore from '../ComponentStore';
 import SvelteJSONEditor from './VJSONEditor';
 import DataPlotter from './DataPlotter';
+import DataSheetSelector from './DataSheetSelector';
 
-export function Breakout(props) {
+export function Breakout(props:
+  {
+    data: any;
+    height: number;
+    mode: string;
+    index: number;
+    parameter_type: string;
+    componentID: number;
+  }) {
   const { data, height, mode, index, parameter_type, componentID } = props;
   const data_types = ['number', 'table', 'string', 'boolean', 'option', 'datasheet'];
   // let additional_controls = null;
@@ -122,7 +131,7 @@ export function Breakout(props) {
         return (
           <>
             <Popover
-              key='datasheet-editor'
+              key="datasheet-editor"
               closeOnClickOutside={false}
               trapFocus
               width={500}
@@ -135,7 +144,9 @@ export function Breakout(props) {
                   Select Datasheet Options
                 </Button>
               </Popover.Target>
-              <Popover.Dropdown>TO DO</Popover.Dropdown>
+              <Popover.Dropdown>
+                <DataSheetSelector datasheetIDs={data.datasheets} />
+              </Popover.Dropdown>
             </Popover>
           </>
         );
@@ -159,7 +170,7 @@ export function Breakout(props) {
           withAsterisk
           w={100}
           value={data.label}
-          key='label-editor'
+          key="label-editor"
           onChange={(e) =>
             updateParameter(componentID, parameter_type, index, { label: e.target.value })
           }
@@ -170,7 +181,7 @@ export function Breakout(props) {
           <TextInput
             size="xs"
             value={data.formula}
-            key='formula-editor'
+            key="formula-editor"
             onChange={(e) =>
               updateParameter(componentID, parameter_type, index, { formula: e.target.value })
             }
@@ -183,7 +194,7 @@ export function Breakout(props) {
             <Select
               w={100}
               description="data type"
-              key='data-type-editor'
+              key="data-type-editor"
               size="xs"
               value={data.data_type}
               onChange={(e) =>
