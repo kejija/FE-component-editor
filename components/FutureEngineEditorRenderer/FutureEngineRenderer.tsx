@@ -13,10 +13,13 @@ import {
 } from '@mantine/core';
 import './component.css';
 
+import dynamic from 'next/dynamic'
+
 import { useState, useEffect } from 'react';
 import { CSVDownload, CSVLink } from 'react-csv';
 
-import SvelteJSONEditor from './modules/VJSONEditor';
+// import SvelteJSONEditor from './modules/VJSONEditor';
+const SvelteJSONEditor = dynamic(() => import('./modules/VJSONEditor'), { ssr: false })
 
 import ComponentPreview from './ComponentPreviewRenderer';
 
@@ -97,7 +100,7 @@ export function FutureEngineRenderer() {
               // add three buttons from this list: ['inputs', 'parameters', 'outputs']
               ['parameters', 'outputs'].map((paramType, index) => (
                 <Button
-                  key = {paramType + index}
+                  key={paramType + index}
                   onClick={() => {
                     addParam(paramType, parseInt(selectedComponentIndex, 10));
                   }}

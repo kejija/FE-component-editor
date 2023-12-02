@@ -14,7 +14,9 @@ import {
   Center,
 } from '@mantine/core';
 import useStore from '../ComponentStore';
-import SvelteJSONEditor from './VJSONEditor';
+import dynamic from 'next/dynamic'
+// import SvelteJSONEditor from './VJSONEditor';
+const SvelteJSONEditor = dynamic(() => import('./VJSONEditor'), { ssr: false })
 import DataPlotter from './DataPlotter';
 import DataSheetSelector from './DataSheetSelector';
 
