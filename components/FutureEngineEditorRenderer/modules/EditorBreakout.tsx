@@ -13,12 +13,12 @@ import {
   TagsInput,
   Center,
 } from '@mantine/core';
+import dynamic from 'next/dynamic';
 import useStore from '../ComponentStore';
-import dynamic from 'next/dynamic'
-// import SvelteJSONEditor from './VJSONEditor';
-const SvelteJSONEditor = dynamic(() => import('./VJSONEditor'), { ssr: false })
 import DataPlotter from './DataPlotter';
 import DataSheetSelector from './DataSheetSelector';
+// import SvelteJSONEditor from './VJSONEditor';
+const SvelteJSONEditor = dynamic(() => import('./VJSONEditor'), { ssr: false })
 
 export function Breakout(props:
   {
